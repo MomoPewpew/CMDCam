@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CamPath {
-    
+
     public int loop;
     public long duration;
     public String mode;
@@ -26,7 +26,7 @@ public class CamPath {
     public List<CamPoint> points;
     public double cameraFollowSpeed;
     public boolean serverPath = false;
-    
+
     public CamPath(NBTTagCompound nbt) {
         this.loop = nbt.getInteger("loop");
         this.duration = nbt.getLong("duration");
@@ -41,7 +41,7 @@ public class CamPath {
         }
         this.cameraFollowSpeed = nbt.getDouble("cameraFollowSpeed");
     }
-    
+
     public CamPath(int loop, long duration, String mode, String interpolation, CamTarget target, List<CamPoint> points, double cameraFollowSpeed) {
         this.loop = loop;
         this.duration = duration;
@@ -51,7 +51,7 @@ public class CamPath {
         this.points = points;
         this.cameraFollowSpeed = cameraFollowSpeed;
     }
-    
+
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("loop", loop);
         nbt.setLong("duration", duration);
@@ -67,7 +67,7 @@ public class CamPath {
         nbt.setDouble("cameraFollowSpeed", cameraFollowSpeed);
         return nbt;
     }
-    
+
     @SideOnly(Side.CLIENT)
     public void overwriteClientConfig() {
         CMDCamClient.lastLoop = this.loop;
@@ -78,58 +78,58 @@ public class CamPath {
         CMDCamClient.points = new ArrayList<>(this.points);
         CMDCamClient.cameraFollowSpeed = this.cameraFollowSpeed;
     }
-    
+
     @SideOnly(Side.CLIENT)
     private boolean hideGui;
     @SideOnly(Side.CLIENT)
     public CamInterpolation cachedInterpolation;
     @SideOnly(Side.CLIENT)
     public CamMode cachedMode;
-    
+
     public long timeStarted = System.currentTimeMillis();
     public int currentLoop;
     private boolean finished;
     private boolean running;
     public List<CamPoint> tempPoints;
-    
+
     public void start(World world) throws PathParseException {
         this.finished = false;
         this.running = true;
-        
+
         this.timeStarted = System.currentTimeMillis();
         this.currentLoop = 0;
         this.tempPoints = new ArrayList<>(points);
         if (loop != 0)
             this.tempPoints.add(this.tempPoints.get(this.tempPoints.size() - 1).copy());
-        
+
         if (world.isRemote) {
             CamMode parser = CamMode.getMode(mode);
-            
+
             this.cachedMode = parser.createMode(this);
             this.cachedMode.onPathStart();
-            
+
             this.cachedInterpolation = CamInterpolation.getInterpolationOrDefault(interpolation);
             this.cachedInterpolation.initMovement(tempPoints, loop, target);
-            
+
             this.hideGui = Minecraft.getMinecraft().gameSettings.hideGUI;
         }
     }
-    
+
     public void finish(World world) {
         this.finished = true;
         this.running = false;
-        
+
         if (world.isRemote) {
             this.cachedMode.onPathFinish();
             this.tempPoints = null;
-            
+
             this.cachedMode = null;
             this.cachedInterpolation = null;
-            
-            Minecraft.getMinecraft().gameSettings.hideGUI = hideGui;
+
+            Minecraft.getMinecraft().gameSettings.hideGUI = this.hideGui;
         }
     }
-    
+
     public void tick(World world, float renderTickTime) {
         long time = System.currentTimeMillis() - timeStarted;
         if (time >= duration) {
@@ -141,32 +141,32 @@ public class CamPath {
         } else {
             if (world.isRemote)
                 Minecraft.getMinecraft().gameSettings.hideGUI = true;
-            
+
             long durationOfPoint = duration / (tempPoints.size() - 1);
             int currentPoint = Math.min((int) (time / durationOfPoint), tempPoints.size() - 2);
             CamPoint point1 = tempPoints.get(currentPoint);
             CamPoint point2 = tempPoints.get(currentPoint + 1);
             double percent = (time % durationOfPoint) / (double) durationOfPoint;
             CamPoint newPoint = cachedMode.getCamPoint(point1, point2, percent, (double) time / duration, renderTickTime, currentLoop == 0, currentLoop == loop);
-            
+
             if (newPoint != null)
                 cachedMode.processPoint(newPoint);
-            
+
         }
     }
-    
+
     public boolean isRunning() {
         return running;
     }
-    
+
     public boolean hasFinished() {
         return finished;
     }
-    
+
     public CamPath copy() {
         CamPath path = new CamPath(currentLoop, duration, mode, interpolation, target, new ArrayList<>(points), cameraFollowSpeed);
         path.serverPath = this.serverPath;
         return path;
     }
-    
+
 }
