@@ -221,7 +221,7 @@ public class CamCommandServer extends CommandBase {
                     ++j;
                     CommandBase.CoordinateArg zoom = parseCoordinate(75, args.length > j ? args[j] : "~", false);
                     if (path == null) {
-                        path = new CamPath(0, 10000, "default", "hermite", null, new ArrayList<>(), 1);
+                        path = new CamPath(0, 10000, "default", "hermite", null, new ArrayList<CamPoint>(), 1);
                         sender.addChatMessage(new TextComponentString("New path was created successfully"));
                     } else
                         sender.addChatMessage(new TextComponentString("New point was added successfully"));
@@ -239,8 +239,8 @@ public class CamCommandServer extends CommandBase {
     }
 
     private static List<EntityPlayerMP> getPlayers(MinecraftServer server, ICommandSender sender, String target) {
-    	List<Entity> entityList = null;
-    	List<EntityPlayerMP> playerList = null;
+    	List<Entity> entityList = new ArrayList<Entity>();
+    	List<EntityPlayerMP> playerList = new ArrayList<EntityPlayerMP>();
 
     	try {
         	entityList = getEntityList(server, sender, target);

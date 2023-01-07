@@ -291,25 +291,4 @@ public class CamCommandClient extends CommandBase {
     public String getCommandUsage(ICommandSender sender) {
         return "used to control the camera";
     }
-
-    private static List<EntityPlayerMP> getPlayers(MinecraftServer server, ICommandSender sender, String target) {
-    	List<Entity> entityList = null;
-    	List<EntityPlayerMP> playerList = null;
-
-    	try {
-        	entityList = getEntityList(server, sender, target);
-    	} catch (EntityNotFoundException e) {
-    		return null;
-    	} catch (CommandException e) {
-    		return null;
-    	}
-
-    	for (Entity e : entityList) {
-    		if (e instanceof EntityPlayerMP) {
-    			playerList.add((EntityPlayerMP) e);
-    		}
-    	}
-
-    	return playerList;
-    }
 }

@@ -40,7 +40,7 @@ public class OutsideMode extends CamMode {
 
     @Override
     public EntityLivingBase getCamera() {
-        return camPlayer;
+        return this.camPlayer;
     }
 
     @Override
@@ -49,14 +49,12 @@ public class OutsideMode extends CamMode {
         super.processPoint(point);
 
         Minecraft mc = Minecraft.getMinecraft();
-        mc.setRenderViewEntity(camPlayer);
-        if (camPlayer instanceof EntityPlayer)
-            ((EntityPlayer) camPlayer).capabilities.isFlying = true;
-        camPlayer.setPositionAndRotation(point.x, point.y, point.z, (float) point.rotationYaw, (float) point.rotationPitch);
-        double playerEyeHeight = mc.thePlayer.getEyeHeight();
-        double camEyeHeight = camPlayer.getEyeHeight();
-        camPlayer.setLocationAndAngles(point.x, point.y - camPlayer.getEyeHeight() + mc.thePlayer.getEyeHeight(), point.z, (float) point.rotationYaw, (float) point.rotationPitch);
-        camPlayer.setRotationYawHead(0);
+        mc.setRenderViewEntity(this.camPlayer);
+        if (this.camPlayer instanceof EntityPlayer)
+            ((EntityPlayer) this.camPlayer).capabilities.isFlying = true;
+        this.camPlayer.setPositionAndRotation(point.x, point.y, point.z, (float) point.rotationYaw, (float) point.rotationPitch);
+        this.camPlayer.setLocationAndAngles(point.x, point.y - this.camPlayer.getEyeHeight() + mc.thePlayer.getEyeHeight(), point.z, (float) point.rotationYaw, (float) point.rotationPitch);
+        this.camPlayer.setRotationYawHead(0);
     }
 
 }

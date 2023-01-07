@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
@@ -52,32 +53,32 @@ public class CamEventHandlerClient {
         if (mc.thePlayer != null && mc.theWorld != null) {
             if (mc.inGameHasFocus) {
                 if (CMDCamClient.getCurrentPath() == null) {
-                    if (mc.gameSettings.isKeyDown(KeyHandler.zoomIn)) {
+                    if (GameSettings.isKeyDown(KeyHandler.zoomIn)) {
                         if (mc.thePlayer.isSneaking())
                             mc.gameSettings.fovSetting -= amountZoom * 10;
                         else
                             mc.gameSettings.fovSetting -= amountZoom;
                     }
 
-                    if (mc.gameSettings.isKeyDown(KeyHandler.zoomOut)) {
+                    if (GameSettings.isKeyDown(KeyHandler.zoomOut)) {
                         if (mc.thePlayer.isSneaking())
                             mc.gameSettings.fovSetting += amountZoom * 10;
                         else
                             mc.gameSettings.fovSetting += amountZoom;
                     }
 
-                    if (mc.gameSettings.isKeyDown(KeyHandler.zoomCenter)) {
+                    if (GameSettings.isKeyDown(KeyHandler.zoomCenter)) {
                         mc.gameSettings.fovSetting = defaultfov;
                     }
                     fov = mc.gameSettings.fovSetting;
 
-                    if (mc.gameSettings.isKeyDown(KeyHandler.rollLeft))
+                    if (GameSettings.isKeyDown(KeyHandler.rollLeft))
                         roll -= amountroll;
 
-                    if (mc.gameSettings.isKeyDown(KeyHandler.rollRight))
+                    if (GameSettings.isKeyDown(KeyHandler.rollRight))
                         roll += amountroll;
 
-                    if (mc.gameSettings.isKeyDown(KeyHandler.rollCenter))
+                    if (GameSettings.isKeyDown(KeyHandler.rollCenter))
                         roll = 0;
 
                     if (KeyHandler.pointKey.isPressed()) {

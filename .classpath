@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="E:/Users/ilike/workspace/CMDCam-SneakyRP/.gradle/minecraft/forge-1.12.2-14.23.5.2847-PROJECT(MPM-SneakyRP)-binpatched.jar"/>
 	<classpathentry kind="lib" path="E:/Users/ilike/workspace/CMDCam-SneakyRP/.gradle/minecraft/forgeBin-1.12.2-14.23.5.2847-PROJECT(MPM-SneakyRP).jar"/>
