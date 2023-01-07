@@ -57,7 +57,7 @@ public abstract class CamMode {
             newPoint.rotationYaw = lastYaw;
             Minecraft mc = Minecraft.getMinecraft();
             
-            Vec3d pos = path.target.getTargetVec(mc.world, mc.getRenderPartialTicks());
+            Vec3d pos = path.target.getTargetVec(mc.theWorld, mc.getRenderPartialTicks());
             
             if (pos != null) {
                 long timeSinceLastRenderFrame = System.nanoTime() - CamEventHandlerClient.lastRenderTime;
@@ -82,7 +82,7 @@ public abstract class CamMode {
     
     @SideOnly(Side.CLIENT)
     public EntityLivingBase getCamera() {
-        return Minecraft.getMinecraft().player;
+        return Minecraft.getMinecraft().thePlayer;
     }
     
     public abstract String getDescription();

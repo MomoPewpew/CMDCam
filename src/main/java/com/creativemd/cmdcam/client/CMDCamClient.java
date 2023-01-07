@@ -55,13 +55,13 @@ public class CMDCamClient extends CMDCamProxy {
     
     public static void startPath(CamPath path) throws PathParseException {
         currentPath = path;
-        currentPath.start(mc.world);
+        currentPath.start(mc.theWorld);
     }
     
     public static void stopPath() {
         if (currentPath.serverPath)
             return;
-        currentPath.finish(mc.world);
+        currentPath.finish(mc.theWorld);
         currentPath = null;
     }
     

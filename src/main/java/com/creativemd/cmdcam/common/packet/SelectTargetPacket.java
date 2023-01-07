@@ -12,19 +12,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 
 public class SelectTargetPacket extends CreativeCorePacket {
-    
+
     public String path;
     public CamTarget target;
-    
+
     public SelectTargetPacket(String path, CamTarget target) {
         this.path = path;
         this.target = target;
     }
-    
+
     public SelectTargetPacket() {
-        
+
     }
-    
+
     @Override
     public void writeBytes(ByteBuf buf) {
         writeString(buf, path);
@@ -33,7 +33,7 @@ public class SelectTargetPacket extends CreativeCorePacket {
             writeNBT(buf, target.writeToNBT(new NBTTagCompound()));
         }
     }
-    
+
     @Override
     public void readBytes(ByteBuf buf) {
         path = readString(buf);
@@ -42,24 +42,24 @@ public class SelectTargetPacket extends CreativeCorePacket {
         } else
             target = null;
     }
-    
+
     @Override
     public void executeClient(EntityPlayer player) {
         CamEventHandlerClient.startSelectingTarget(path);
     }
-    
+
     @Override
     public void executeServer(EntityPlayer player) {
-        if (player.canUseCommand(4, "cam-server")) {
-            CamPath loaded = CMDCamServer.getPath(player.world, path);
+        if (player.canCommandSenderUseCommand(4, "cam-server")) {
+            CamPath loaded = CMDCamServer.getPath(player.worldObj, path);
             if (loaded != null) {
                 loaded.target = target;
-                CMDCamServer.setPath(player.world, path, loaded);
-                player.sendMessage(new TextComponentString("Set target for path '" + path + "' successfully!"));
+                CMDCamServer.setPath(player.worldObj, path, loaded);
+                player.addChatMessage(new TextComponentString("Set target for path '" + path + "' successfully!"));
             } else
-                player.sendMessage(new TextComponentString("Path could not be found"));
+                player.addChatMessage(new TextComponentString("Path could not be found"));
         } else
-            player.sendMessage(new TextComponentString("You do not have the permission for that"));
+            player.addChatMessage(new TextComponentString("You do not have the permission for that"));
     }
-    
+
 }
