@@ -1,2 +1,2 @@
-# CMDCam
-http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2741563-cmdcam-be-camera-actor-at-the-same-time-smooth
+# CMDCam-SneakyRP
+This is a custom branch of CMDCam for the sneakyRP project

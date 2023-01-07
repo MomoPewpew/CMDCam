@@ -1,2 +1,11 @@
 src/main/java/org
 src/main/java/com/badlogic
+/.gradle/
+/gradle/
+/.settings/
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
