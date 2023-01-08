@@ -39,12 +39,12 @@ public class DefaultMode extends CamMode {
         
         Minecraft mc = Minecraft.getMinecraft();
         
-        mc.thePlayer.capabilities.isFlying = true;
+        mc.player.capabilities.isFlying = true;
         
-        mc.thePlayer.setPositionAndRotation(point.x, point.y, point.z, (float) point.rotationYaw, (float) point.rotationPitch);
-        mc.thePlayer.prevRotationYaw = (float) point.rotationYaw;
-        mc.thePlayer.prevRotationPitch = (float) point.rotationPitch;
-        mc.thePlayer.setLocationAndAngles(point.x, point.y/*-mc.thePlayer.getEyeHeight()*/, point.z, (float) point.rotationYaw, (float) point.rotationPitch);
+        mc.player.setPositionAndRotation(point.x, point.y, point.z, (float) point.rotationYaw, (float) point.rotationPitch);
+        mc.player.prevRotationYaw = (float) point.rotationYaw;
+        mc.player.prevRotationPitch = (float) point.rotationPitch;
+        mc.player.setLocationAndAngles(point.x, point.y/*-mc.thePlayer.getEyeHeight()*/, point.z, (float) point.rotationYaw, (float) point.rotationPitch);
         
     }
     
@@ -55,8 +55,8 @@ public class DefaultMode extends CamMode {
         
         Minecraft mc = Minecraft.getMinecraft();
         
-        if (!mc.thePlayer.isCreative() && !mc.thePlayer.isSpectator())
-            mc.thePlayer.capabilities.isFlying = false;
+        if (!mc.player.isCreative() && !mc.player.isSpectator())
+            mc.player.capabilities.isFlying = false;
         
         if (Minecraft.IS_RUNNING_ON_MAC) {
             Mouse.setGrabbed(false);

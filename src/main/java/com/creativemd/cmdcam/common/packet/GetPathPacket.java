@@ -43,7 +43,7 @@ public class GetPathPacket extends CreativeCorePacket {
         if (path != null)
             PacketHandler.sendPacketToPlayer(new SetPathPacket(id, path), (EntityPlayerMP) player);
         else
-            player.addChatMessage(new TextComponentString("Path '" + id + "' could not be found!"));
+            player.sendMessage(new TextComponentString("Path '" + id + "' could not be found!"));
     }
     
 }
