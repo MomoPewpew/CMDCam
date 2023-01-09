@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/CMDCam-SneakyRP"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
 <mapEntry key="FORGE_GROUP" value="net.minecraftforge"/>
 <mapEntry key="FORGE_VERSION" value="14.23.5.2859"/>
@@ -15,7 +21,6 @@
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.buildship.core.classpathprovider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="net.minecraftforge.legacydev.MainClient"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value=""/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="CMDCam-SneakyRP"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dforge.logging.console.level=debug -Dforge.logging.markers=SCAN,REGISTRIES,REGISTRYDUMP"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="E:\Users\ilike\workspace\CMDCam-SneakyRP\run"/>
