@@ -25,22 +25,22 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 
 public class CamCommandServer extends CommandBase {
-    
+
     @Override
     public int getRequiredPermissionLevel() {
         return 2;
     }
-    
+
     @Override
     public String getName() {
         return "cam-server";
     }
-    
+
     @Override
     public String getUsage(ICommandSender sender) {
         return "used to control the camera (server side)";
     }
-    
+
     public static long StringToDuration(String input) {
         String replacement = null;
         int factor = 0;
@@ -60,7 +60,7 @@ public class CamCommandServer extends CommandBase {
             replacement = "d";
             factor = 1000 * 60 * 60 * 24;
         }
-        
+
         try {
             if (replacement == null) {
                 replacement = "";
@@ -68,11 +68,11 @@ public class CamCommandServer extends CommandBase {
             }
             return Long.parseLong(input.replaceAll(replacement, "")) * factor;
         } catch (Exception e) {
-            
+
         }
         return -1;
     }
-    
+
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if (args.length == 0) {
@@ -110,11 +110,11 @@ public class CamCommandServer extends CommandBase {
                                     path.currentLoop = Integer.parseInt(args[5]);
                             }
                         }
-                        
+
                         PacketHandler.sendPacketToPlayers(new StartPathPacket(path), players);
                     } else
                         sender.sendMessage(new TextComponentString("Path '" + args[2] + "' could not be found!"));
-                    
+
                 } else
                     sender.sendMessage(new TextComponentString("" + ChatFormatting.BOLD + ChatFormatting.YELLOW + "/cam-server start <player> <path> [" + String
                         .join(":", CamMode.modes.keySet()) + "] [time|ms|s|m|h|d] [loops (-1 -> endless)] " + ChatFormatting.RED + "starts the animation"));
@@ -176,7 +176,7 @@ public class CamCommandServer extends CommandBase {
                                     CommandBase.CoordinateArg x = parseCoordinate(vec3d.x, args[j++], true);
                                     CommandBase.CoordinateArg y = parseCoordinate(vec3d.y, args[j++], -4096, 4096, false);
                                     CommandBase.CoordinateArg z = parseCoordinate(vec3d.z, args[j++], true);
-                                    
+
                                     path.target = new CamTarget.VecTarget(new Vec3d(x.getResult(), y.getResult(), z.getResult()));
                                     sender.sendMessage(new TextComponentString("Camera will point towards " + x.getResult() + ", " + y.getResult() + ", " + z.getResult()));
                                 } else
@@ -205,9 +205,9 @@ public class CamCommandServer extends CommandBase {
             } else if (subCommand.equals("add")) {
                 if (args.length >= 5) {
                     CamPath path = CMDCamServer.getPath(sender.getEntityWorld(), args[1]);
-                    
+
                     Vec3d vec3d = sender.getPositionVector();
-                    int j = 1;
+                    int j = 2;
                     CommandBase.CoordinateArg x = parseCoordinate(vec3d.x, args[j++], true);
                     CommandBase.CoordinateArg y = parseCoordinate(vec3d.y, args[j++], -4096, 4096, false);
                     CommandBase.CoordinateArg z = parseCoordinate(vec3d.z, args[j++], true);
@@ -224,7 +224,7 @@ public class CamCommandServer extends CommandBase {
                     } else
                         sender.sendMessage(new TextComponentString("New point was added successfully"));
                     path.points.add(new CamPoint(x.getResult(), y.getResult(), z.getResult(), yaw.getResult(), pitch.getResult(), roll.getResult(), zoom.getResult()));
-                    
+
                     CMDCamServer.setPath(sender.getEntityWorld(), args[1], path);
                 } else
                     sender
@@ -235,5 +235,5 @@ public class CamCommandServer extends CommandBase {
             }
         }
     }
-    
+
 }
