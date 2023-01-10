@@ -9,6 +9,7 @@ import com.creativemd.cmdcam.client.interpolation.CamInterpolation;
 import com.creativemd.cmdcam.client.mode.CamMode;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -86,6 +87,8 @@ public class CamPath {
     @SideOnly(Side.CLIENT)
     private boolean hideGui;
     @SideOnly(Side.CLIENT)
+    private int thirdPersonView;
+    @SideOnly(Side.CLIENT)
     public CamInterpolation cachedInterpolation;
     @SideOnly(Side.CLIENT)
     public CamMode cachedMode;
@@ -115,7 +118,9 @@ public class CamPath {
             this.cachedInterpolation = CamInterpolation.getInterpolationOrDefault(interpolation);
             this.cachedInterpolation.initMovement(tempPoints, loop, target);
 
-            this.hideGui = Minecraft.getMinecraft().gameSettings.hideGUI;
+        	GameSettings gameSettings = Minecraft.getMinecraft().gameSettings;
+            this.hideGui = gameSettings.hideGUI;
+            this.thirdPersonView = gameSettings.thirdPersonView;
         }
     }
 
@@ -130,7 +135,9 @@ public class CamPath {
             this.cachedMode = null;
             this.cachedInterpolation = null;
 
-            Minecraft.getMinecraft().gameSettings.hideGUI = hideGui;
+        	GameSettings gameSettings = Minecraft.getMinecraft().gameSettings;
+            gameSettings.hideGUI = hideGui;
+            gameSettings.thirdPersonView = this.thirdPersonView;
         }
     }
 
@@ -143,8 +150,11 @@ public class CamPath {
             } else
                 finish(world);
         } else {
-            if (world.isRemote)
-                Minecraft.getMinecraft().gameSettings.hideGUI = true;
+            if (world.isRemote) {
+            	GameSettings gameSettings = Minecraft.getMinecraft().gameSettings;
+                gameSettings.hideGUI = true;
+                gameSettings.thirdPersonView = 0;
+            }
 
             long durationOfPoint = duration / (tempPoints.size() - 1);
             int currentPoint = Math.min((int) (time / durationOfPoint), tempPoints.size() - 2);
