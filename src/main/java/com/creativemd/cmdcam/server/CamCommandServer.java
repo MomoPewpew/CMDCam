@@ -211,14 +211,22 @@ public class CamCommandServer extends CommandBase {
                     String xString = args[j++];
                     String yString = args[j++];
                     String zString = args[j++];
+                    String yawString = args.length > j ? args[j] : "~";
+                    ++j;
+                    String pitchString = args.length > j ? args[j] : "~";
+                    ++j;
 
                     if (yawAdjust || pitchAdjust) {
-                        float playerYaw = (float) (yawAdjust ? Math.toRadians(((EntityPlayerMP) sender).rotationYaw) : 0F);
-                        float playerPitch = (float) (pitchAdjust ? Math.toRadians(((EntityPlayerMP) sender).rotationPitch) : 0F);
+                    	float playerYawDeg = yawAdjust ? ((EntityPlayerMP) sender).rotationYaw : 0F;
+                    	float playerPitchDeg = pitchAdjust ? ((EntityPlayerMP) sender).rotationPitch : 0F;
+                        float playerYaw = (float) Math.toRadians(playerYawDeg);
+                        float playerPitch = (float) Math.toRadians(playerPitchDeg);
 
                         float xFloat = xString.equals("~") ? 0F : Float.valueOf(xString.replace("~", ""));
                         float yFloat = yString.equals("~") ? 0F : Float.valueOf(yString.replace("~", ""));
                         float zFloat = zString.equals("~") ? 0F : Float.valueOf(zString.replace("~", ""));
+                        float yawFloat = yawString.equals("~") ? 0F : Float.valueOf(yawString.replace("~", ""));
+                        float pitchFloat = pitchString.equals("~") ? 0F : Float.valueOf(pitchString.replace("~", ""));
 
                         float anglePrev;
         				float hyp;
@@ -238,6 +246,7 @@ public class CamCommandServer extends CommandBase {
 
         				float Zpitch = (float) (Math.sin(anglePrev + playerPitch) * hyp);
         				float Ypitch = (float) (Math.cos(anglePrev + playerPitch) * hyp);
+        				float yawAdjusted = yawFloat + playerYawDeg;
 
         				//Apply yaw
         				if (xFloat == 0) {
@@ -255,10 +264,13 @@ public class CamCommandServer extends CommandBase {
 
         				float Xyaw = (float) -(Math.sin(anglePrev + playerYaw) * hyp);
         				float Zyaw = (float) (Math.cos(anglePrev + playerYaw) * hyp);
+        				float pitchAdjusted = (float) (pitchFloat + (Math.cos(Math.toRadians(yawFloat)) * playerPitchDeg));
 
         				xString = "~" + String.format("%.02f", Xyaw);
         				yString = "~" + String.format("%.02f", Ypitch);
         				zString = "~" + String.format("%.02f", Zyaw);
+        				yawString = String.format("%.02f", yawAdjusted);
+        				pitchString = String.format("%.02f", pitchAdjusted);
                     }
 
                     CamPath path = CMDCamServer.getPath(sender.getEntityWorld(), args[1]);
@@ -268,11 +280,9 @@ public class CamCommandServer extends CommandBase {
                     CommandBase.CoordinateArg x = parseCoordinate(vec3d.x, xString, true);
                     CommandBase.CoordinateArg y = parseCoordinate(vec3d.y, yString, -4096, 4096, false);
                     CommandBase.CoordinateArg z = parseCoordinate(vec3d.z, zString, true);
+                    CommandBase.CoordinateArg yaw = parseCoordinate(0, yawString, false);
+                    CommandBase.CoordinateArg pitch = parseCoordinate(0, pitchString, false);
 
-                    CommandBase.CoordinateArg yaw = parseCoordinate(0, args.length > j ? args[j] : "~", false);
-                    ++j;
-                    CommandBase.CoordinateArg pitch = parseCoordinate(0, args.length > j ? args[j] : "~", false);
-                    ++j;
                     CommandBase.CoordinateArg roll = parseCoordinate(0, args.length > j ? args[j] : "~", false);
                     ++j;
                     CommandBase.CoordinateArg zoom = parseCoordinate(75, args.length > j ? args[j] : "~", false);
