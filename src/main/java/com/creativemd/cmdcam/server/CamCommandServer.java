@@ -1,6 +1,7 @@
 package com.creativemd.cmdcam.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -133,9 +134,9 @@ public class CamCommandServer extends CommandBase {
             } else if (subCommand.equals("remove")) {
                 if (args.length >= 2) {
                     if (CMDCamServer.removePath(sender.getEntityWorld(), args[1]))
-                        sender.sendMessage(new TextComponentString("Path '" + args[1] + "' has been removed!"));
+                    	if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("Path '" + args[1] + "' has been removed!"));
                     else
-                        sender.sendMessage(new TextComponentString("Path '" + args[1] + "' could not be found!"));
+                    	if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("Path '" + args[1] + "' could not be found!"));
                 } else
                     sender
                         .sendMessage(new TextComponentString("" + ChatFormatting.BOLD + ChatFormatting.YELLOW + "/cam-server remove <name> " + ChatFormatting.RED + "lists all saved paths"));
@@ -149,7 +150,7 @@ public class CamCommandServer extends CommandBase {
                             path.interpolation = interpolation;
                             path.cachedInterpolation = move;
                             CMDCamServer.setPath(sender.getEntityWorld(), args[1], path);
-                            sender.sendMessage(new TextComponentString("Interpolation has been set to '" + interpolation + "'!"));
+                            if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("Interpolation has been set to '" + interpolation + "'!"));
                         } else
                             sender.sendMessage(new TextComponentString("Interpolation '" + interpolation + "' not found!"));
                     } else
@@ -165,10 +166,10 @@ public class CamCommandServer extends CommandBase {
                             String target = args[2];
                             if (target.equals("self")) {
                                 path.target = new CamTarget.SelfTarget();
-                                sender.sendMessage(new TextComponentString("The camera will point towards you!"));
+                                if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("The camera will point towards you!"));
                             } else if (target.equals("none")) {
                                 path.target = null;
-                                sender.sendMessage(new TextComponentString("Removed target!"));
+                                if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("Removed target!"));
                             } else if (target.equals("pos")) {
                                 if (args.length >= 6) {
                                     Vec3d vec3d = sender.getPositionVector();
@@ -178,7 +179,7 @@ public class CamCommandServer extends CommandBase {
                                     CommandBase.CoordinateArg z = parseCoordinate(vec3d.z, args[j++], true);
 
                                     path.target = new CamTarget.VecTarget(new Vec3d(x.getResult(), y.getResult(), z.getResult()));
-                                    sender.sendMessage(new TextComponentString("Camera will point towards " + x.getResult() + ", " + y.getResult() + ", " + z.getResult()));
+                                    if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("Camera will point towards " + x.getResult() + ", " + y.getResult() + ", " + z.getResult()));
                                 } else
                                     sender.sendMessage(new TextComponentString("Invalid position"));
                             } else if (target.equals("entity")) {
@@ -186,7 +187,7 @@ public class CamCommandServer extends CommandBase {
                                     try {
                                         UUID uuid = UUID.fromString(args[3]);
                                         path.target = new CamTarget.EntityTarget(uuid.toString());
-                                        sender.sendMessage(new TextComponentString("Camera will point towards " + args[3]));
+                                        if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("Camera will point towards " + args[3]));
                                     } catch (IllegalArgumentException e) {
                                         sender.sendMessage(new TextComponentString("Invalid uuid"));
                                     }
@@ -289,18 +290,18 @@ public class CamCommandServer extends CommandBase {
 
                     if (path == null) {
                         path = new CamPath(0, 10000, "default", "hermite", null, new ArrayList<>(), 1);
-                        sender.sendMessage(new TextComponentString("New path was created successfully"));
+                    	if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("New path was created successfully"));
                     } else
-                        sender.sendMessage(new TextComponentString("New point was added successfully"));
+                        if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("New point was added successfully"));
                     path.points.add(new CamPoint(x.getResult(), y.getResult(), z.getResult(), yaw.getResult(), pitch.getResult(), roll.getResult(), zoom.getResult()));
 
-                    CMDCamServer.setPath(sender.getEntityWorld(), args[1], path);
+                	CMDCamServer.setPath(sender.getEntityWorld(), args[1], path);
                 } else
                     sender
                         .sendMessage(new TextComponentString("" + ChatFormatting.BOLD + ChatFormatting.YELLOW + "/cam-server add <path> <x> <y> <z> [yaw] [pitch] [roll] [zoom] [YawAdjust] [PitchAdjust]" + ChatFormatting.RED + "adds a new point to path or creates a new one"));
             } else if (subCommand.equals("clear")) {
                 CMDCamServer.clearPaths(sender.getEntityWorld());
-                sender.sendMessage(new TextComponentString("Removed all existing paths (in this world)!"));
+                if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("Removed all existing paths (in this world)!"));
             }
         }
     }
