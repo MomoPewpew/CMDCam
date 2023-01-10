@@ -59,8 +59,6 @@ public class CMDCamClient extends CMDCamProxy {
     }
     
     public static void stopPath() {
-        if (currentPath.serverPath)
-            return;
         currentPath.finish(mc.world);
         currentPath = null;
     }
