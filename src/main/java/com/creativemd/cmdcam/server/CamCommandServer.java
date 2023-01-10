@@ -204,13 +204,71 @@ public class CamCommandServer extends CommandBase {
                         .sendMessage(new TextComponentString("" + ChatFormatting.BOLD + ChatFormatting.YELLOW + "/cam-server target <path> <none:self:pos:entity> " + ChatFormatting.RED + "set the camera target"));
             } else if (subCommand.equals("add")) {
                 if (args.length >= 5) {
+                    boolean yawAdjust = args.length > 9 ? Boolean.valueOf(args[9]) : false;
+                    boolean pitchAdjust = args.length > 10 ? Boolean.valueOf(args[10]) : false;
+
+                    int j = 2;
+                    String xString = args[j++];
+                    String yString = args[j++];
+                    String zString = args[j++];
+
+                    if (yawAdjust || pitchAdjust) {
+                        float playerYaw = (float) (yawAdjust ? Math.toRadians(((EntityPlayerMP) sender).rotationYaw) : 0F);
+                        float playerPitch = (float) (pitchAdjust ? Math.toRadians(((EntityPlayerMP) sender).rotationPitch) : 0F);
+
+                        float xFloat = xString.equals("~") ? 0F : Float.valueOf(xString.replace("~", ""));
+                        float yFloat = yString.equals("~") ? 0F : Float.valueOf(yString.replace("~", ""));
+                        float zFloat = zString.equals("~") ? 0F : Float.valueOf(zString.replace("~", ""));
+
+                        float anglePrev;
+        				float hyp;
+
+                        if (zFloat == 0) {
+        					if (yFloat <= 0) {
+        						anglePrev = 0.0F;
+        						hyp = yFloat;
+        					} else {
+        						anglePrev = (float) Math.PI;
+        						hyp = -yFloat;
+        					}
+        				} else {
+        					anglePrev = (float) Math.atan2(zFloat, yFloat);
+        					hyp = (float) (zFloat / Math.sin(anglePrev));
+        				}
+
+        				float Zpitch = (float) (Math.sin(anglePrev + playerPitch) * hyp);
+        				float Ypitch = (float) (Math.cos(anglePrev + playerPitch) * hyp);
+
+        				//Apply yaw
+        				if (xFloat == 0) {
+        					if (Zpitch >= 0) {
+        						anglePrev = 0.0F;
+        						hyp = Zpitch;
+        					} else {
+        						anglePrev = (float) Math.PI;
+        						hyp = -Zpitch;
+        					}
+        				} else {
+        					anglePrev = (float) Math.atan2(-xFloat, Zpitch);
+        					hyp = (float) (-xFloat / Math.sin(anglePrev));
+        				}
+
+        				float Xyaw = (float) -(Math.sin(anglePrev + playerYaw) * hyp);
+        				float Zyaw = (float) (Math.cos(anglePrev + playerYaw) * hyp);
+
+        				xString = "~" + String.format("%.02f", Xyaw);
+        				yString = "~" + String.format("%.02f", Ypitch);
+        				zString = "~" + String.format("%.02f", Zyaw);
+                    }
+
                     CamPath path = CMDCamServer.getPath(sender.getEntityWorld(), args[1]);
 
                     Vec3d vec3d = sender.getPositionVector();
-                    int j = 2;
-                    CommandBase.CoordinateArg x = parseCoordinate(vec3d.x, args[j++], true);
-                    CommandBase.CoordinateArg y = parseCoordinate(vec3d.y, args[j++], -4096, 4096, false);
-                    CommandBase.CoordinateArg z = parseCoordinate(vec3d.z, args[j++], true);
+
+                    CommandBase.CoordinateArg x = parseCoordinate(vec3d.x, xString, true);
+                    CommandBase.CoordinateArg y = parseCoordinate(vec3d.y, yString, -4096, 4096, false);
+                    CommandBase.CoordinateArg z = parseCoordinate(vec3d.z, zString, true);
+
                     CommandBase.CoordinateArg yaw = parseCoordinate(0, args.length > j ? args[j] : "~", false);
                     ++j;
                     CommandBase.CoordinateArg pitch = parseCoordinate(0, args.length > j ? args[j] : "~", false);
@@ -218,6 +276,7 @@ public class CamCommandServer extends CommandBase {
                     CommandBase.CoordinateArg roll = parseCoordinate(0, args.length > j ? args[j] : "~", false);
                     ++j;
                     CommandBase.CoordinateArg zoom = parseCoordinate(75, args.length > j ? args[j] : "~", false);
+
                     if (path == null) {
                         path = new CamPath(0, 10000, "default", "hermite", null, new ArrayList<>(), 1);
                         sender.sendMessage(new TextComponentString("New path was created successfully"));
@@ -228,7 +287,7 @@ public class CamCommandServer extends CommandBase {
                     CMDCamServer.setPath(sender.getEntityWorld(), args[1], path);
                 } else
                     sender
-                        .sendMessage(new TextComponentString("" + ChatFormatting.BOLD + ChatFormatting.YELLOW + "/cam-server add <path> <x> <y> <z> [yaw] [pitch] [roll] [zoom] " + ChatFormatting.RED + "adds a new point to path or creates a new one"));
+                        .sendMessage(new TextComponentString("" + ChatFormatting.BOLD + ChatFormatting.YELLOW + "/cam-server add <path> <x> <y> <z> [yaw] [pitch] [roll] [zoom] [YawAdjust] [PitchAdjust]" + ChatFormatting.RED + "adds a new point to path or creates a new one"));
             } else if (subCommand.equals("clear")) {
                 CMDCamServer.clearPaths(sender.getEntityWorld());
                 sender.sendMessage(new TextComponentString("Removed all existing paths (in this world)!"));
