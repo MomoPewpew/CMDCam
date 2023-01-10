@@ -133,9 +133,9 @@ public class CamCommandServer extends CommandBase {
             } else if (subCommand.equals("remove")) {
                 if (args.length >= 2) {
                     if (CMDCamServer.removePath(sender.getEntityWorld(), args[1]))
-                        sender.sendMessage(new TextComponentString("Path '" + args[2] + "' has been removed!"));
+                        sender.sendMessage(new TextComponentString("Path '" + args[1] + "' has been removed!"));
                     else
-                        sender.sendMessage(new TextComponentString("Path '" + args[2] + "' could not be found!"));
+                        sender.sendMessage(new TextComponentString("Path '" + args[1] + "' could not be found!"));
                 } else
                     sender
                         .sendMessage(new TextComponentString("" + ChatFormatting.BOLD + ChatFormatting.YELLOW + "/cam-server remove <name> " + ChatFormatting.RED + "lists all saved paths"));
