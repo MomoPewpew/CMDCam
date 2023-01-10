@@ -165,7 +165,7 @@ public class CamCommandServer extends CommandBase {
                         if (args.length >= 3) {
                             String target = args[2];
                             if (target.equals("self")) {
-                                path.target = new CamTarget.SelfTarget();
+                                path.target = new CamTarget.SelfTargetServer();
                                 if (!Arrays.asList(args).contains("-s")) sender.sendMessage(new TextComponentString("The camera will point towards you!"));
                             } else if (target.equals("none")) {
                                 path.target = null;

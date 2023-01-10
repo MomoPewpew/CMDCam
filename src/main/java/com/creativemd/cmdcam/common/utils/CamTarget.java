@@ -42,6 +42,7 @@ public abstract class CamTarget {
         registerTargetType(VecTarget.class, "vec");
         registerTargetType(EntityTarget.class, "entity");
         registerTargetType(SelfTarget.class, "self");
+        targetTypesInverted.put(SelfTargetServer.class, "self");
     }
     
     public abstract Vec3d getTargetVec(World world, float partialTicks);
@@ -200,5 +201,28 @@ public abstract class CamTarget {
         }
         
     }
-    
+
+    public static class SelfTargetServer extends CamTarget {
+
+        public SelfTargetServer() {
+
+        }
+
+        @Override
+        protected void write(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        protected void read(NBTTagCompound nbt) {
+
+        }
+
+        @Override
+        public Vec3d getTargetVec(World world, float partialTicks) {
+            return null;
+        }
+
+    }
+
 }
