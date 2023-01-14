@@ -13,6 +13,7 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -108,6 +109,12 @@ public class CamPath {
         this.tempPoints = new ArrayList<>(points);
         if (loop != 0)
             this.tempPoints.add(this.tempPoints.get(this.tempPoints.size() - 1).copy());
+
+        if (this.target != null) {
+            Minecraft mc = Minecraft.getMinecraft();
+            Vec3d pos = this.target.getTargetVec(mc.world, mc.getRenderPartialTicks());
+        	this.tempPoints.get(0).faceEntity(pos, 0.00000001F, 0.00000001F, Double.MAX_VALUE);
+        }
 
         if (world.isRemote) {
             CamMode parser = CamMode.getMode(mode);
